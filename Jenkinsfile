@@ -1,9 +1,19 @@
 pipeline {
     agent any
     stages {
-        stage('Hola') {
+        stage('Build') {
             steps {
-                echo 'Hola Mundo desde Jenkins!!!'
+                echo 'Compilando el codigo fuente...'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Ejecutando pruebas unitarias...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Desplegando la aplicacion en el entorno de prueba...'
             }
         }
     }
