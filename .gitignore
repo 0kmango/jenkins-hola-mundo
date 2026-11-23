@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Reportes de pruebas y cachés
+.pytest_cache/
+resultados/
+
+# Editores
+.vscode/
+.idea/
