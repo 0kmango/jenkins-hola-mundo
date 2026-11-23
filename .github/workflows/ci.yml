@@ -1,0 +1,52 @@
+name: CI
+
+# Espejo en GitHub Actions de lo que hace el Jenkinsfile, para poder verificar
+# el repositorio sin tener Jenkins instalado. Las etapas son las mismas:
+# preparar entorno → ejecutar el programa → pruebas.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline:
+    name: Pipeline (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Clonar código
+        uses: actions/checkout@v4
+
+      - name: Preparar entorno
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          python --version
+
+      - name: Ejecutar programa
+        run: python hola.py
+
+      - name: Pruebas automatizadas
+        run: pytest -q --junitxml=resultados/pruebas.xml
+
+      - name: Publicar el reporte de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-pruebas-${{ matrix.python-version }}
+          path: resultados/
+          if-no-files-found: warn
