@@ -29,7 +29,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          # El repositorio no tiene requirements.txt ni pyproject.toml, así que
+          # hay que decirle al caché de pip qué archivo mirar.
           cache: pip
+          cache-dependency-path: requirements-dev.txt
 
       - name: Instalar dependencias
         run: |
